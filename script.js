@@ -64,72 +64,50 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   });
 });
 
-// Cursor Trail Effect
-const cursorTrail = document.getElementById("cursorTrail");
-let trails = [];
-const maxTrails = 10;
+// Guard Motion-Heavy Features
+if (!prefersReducedMotion) {
+  // Cursor Trail Effect
+  const cursorTrail = document.getElementById("cursorTrail");
+  let trails = [];
+  const maxTrails = 10;
 
-document.addEventListener("mousemove", (e) => {
-  const trail = cursorTrail.cloneNode();
-  trail.style.left = e.pageX + "px";
-  trail.style.top = e.pageY + "px";
-  trail.style.opacity = "1";
-  document.body.appendChild(trail);
-  trails.push(trail);
+  document.addEventListener("mousemove", (e) => {
+    const trail = cursorTrail.cloneNode();
+    trail.style.left = e.pageX + "px";
+    trail.style.top = e.pageY + "px";
+    trail.style.opacity = "1";
+    document.body.appendChild(trail);
+    trails.push(trail);
 
-  setTimeout(() => {
-    trail.style.opacity = "0";
-  }, 100);
+    setTimeout(() => {
+      trail.style.opacity = "0";
+    }, 100);
+    setTimeout(() => {
+      trail.remove();
+    }, 500);
 
-  setTimeout(() => {
-    trail.remove();
-  }, 500);
-
-  if (trails.length > maxTrails) {
-    trails[0].remove();
-    trails.shift();
-  }
-});
-
-// Skill Progress Animation
-const observerOptions = {
-  threshold: 0.5,
-};
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      const skillBars = entry.target.querySelectorAll(".skill-progress");
-      skillBars.forEach((bar) => {
-        const progress = bar.getAttribute("data-progress");
-        bar.style.width = progress + "%";
-      });
-      observer.unobserve(entry.target);
+    if (trails.length > maxTrails) {
+      trails[0].remove();
+      trails.shift();
     }
   });
-}, observerOptions);
 
-observer.observe(document.getElementById("skills"));
-
-// Project Card Tilt Effect
-const cards = document.querySelectorAll(".project-card");
-cards.forEach((card) => {
-  card.addEventListener("mousemove", (e) => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const rotateX = (y - centerY) / 10;
-    const rotateY = (centerX - x) / 10;
-
-    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+  // Project Card Tilt Effect
+  const cards = document.querySelectorAll(".project-card");
+  cards.forEach((card) => {
+    card.addEventListener("mousemove", (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = (y - centerY) / 10;
+      const rotateY = (centerX - x) / 10;
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+    });
+    card.addEventListener("mouseleave", () => {
+      card.style.transform =
+        "perspective(1000px) rotateX(0) rotateY(0) translateY(0)";
+    });
   });
-
-  card.addEventListener("mouseleave", () => {
-    card.style.transform =
-      "perspective(1000px) rotateX(0) rotateY(0) translateY(0)";
-  });
-});
+}
