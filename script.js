@@ -118,3 +118,38 @@ if (!prefersReducedMotion) {
     });
   });
 }
+
+// Skill Progress Animation (per-bar observer)
+const skillBars = document.querySelectorAll(".skill-progress");
+
+function fillBar(el) {
+  const progress = el.getAttribute("data-progress");
+  // If user prefers reduced motion, set width instantly
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    el.style.transition = "none";
+  }
+  el.style.width = progress + "%";
+}
+
+if ("IntersectionObserver" in window) {
+  const barObserver = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          fillBar(entry.target);
+          obs.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      root: null,
+      threshold: 0.2,
+      rootMargin: "0px 0px -10% 0px",
+    }
+  );
+
+  skillBars.forEach((bar) => barObserver.observe(bar));
+} else {
+  // Fallback for old browsers—fill immediately
+  skillBars.forEach(fillBar);
+}
