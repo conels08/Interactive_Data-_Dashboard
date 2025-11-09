@@ -1,3 +1,8 @@
+// Cursor: Respect "Reduce Motion"
+const prefersReducedMotion = window.matchMedia(
+  "(prefers-reduced-motion: reduce)"
+).matches;
+
 // Typing Effect
 const typingText = document.getElementById("typingText");
 const phrases = ["Problem Solver", "Creative Thinker", "Code Enthusiast"];
