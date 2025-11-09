@@ -68,17 +68,20 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   });
 });
 
-// Guard Motion-Heavy Features
+// Guard Motion-Heavy Features with if statement
 if (!prefersReducedMotion) {
-  // Cursor Trail Effect
+  // Cursor Trail Effect (scroll-safe, uses viewport coords)
   const cursorTrail = document.getElementById("cursorTrail");
   let trails = [];
   const maxTrails = 10;
 
   document.addEventListener("mousemove", (e) => {
+    const x = e.clientX; // viewport coords (correct for position: fixed)
+    const y = e.clientY;
+
     const trail = cursorTrail.cloneNode();
-    trail.style.left = e.pageX + "px";
-    trail.style.top = e.pageY + "px";
+    trail.style.left = x + "px";
+    trail.style.top = y + "px";
     trail.style.opacity = "1";
     document.body.appendChild(trail);
     trails.push(trail);
