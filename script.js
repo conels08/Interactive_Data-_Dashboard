@@ -34,14 +34,18 @@ function typeEffect() {
 
 typeEffect();
 
-// Scroll Progress Bar
-window.addEventListener("scroll", () => {
-  const windowHeight =
-    document.documentElement.scrollHeight -
-    document.documentElement.clientHeight;
-  const scrolled = (window.scrollY / windowHeight) * 100;
-  document.getElementById("scrollProgress").style.width = scrolled + "%";
-});
+// Scroll Progress Bar (optimized)
+const scrollBar = document.getElementById("scrollProgress");
+window.addEventListener(
+  "scroll",
+  () => {
+    const max =
+      document.documentElement.scrollHeight -
+      document.documentElement.clientHeight;
+    scrollBar.style.width = (window.scrollY / max) * 100 + "%";
+  },
+  { passive: true }
+);
 
 // Navbar Scroll Effect
 const navbar = document.getElementById("navbar");
